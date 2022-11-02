@@ -1,5 +1,6 @@
 import sys
 import os
+import webbrowser
 import speech_recognition as sr
 
 def takeCommandVoice():
@@ -19,6 +20,13 @@ def takeCommandVoice():
 def takeCommand():
     query = input()
     return query
+
+def command_voice_text(inp):
+    if inp == 'text':
+        return takeCommand()
+    elif inp == 'voice':
+        return takeCommandVoice()
+
 
 def print_introduction():
     print("Welcome to the all new CMD controlled by your voice!")
@@ -114,11 +122,39 @@ def print_help():
     print("cat - print file contents")
     print("echo - print text")
 
+def try_google(command):
+    try:
+        print("Searching on Google...")
+        webbrowser.open("https://www.google.com/search?q=" + command)
+    except Exception as e:
+        print(e)
+
+def play_music_on_youtube(command):
+    try:
+        print("Playing on YouTube...")
+        webbrowser.open("https://www.youtube.com/results?search_query=" + command)
+    except Exception as e:
+        print(e)
+
+def snake_and_ladder():
+    try:
+        print("Opening Snake and Ladder...")
+        webbrowser.open("https://toytheater.com/snakes-and-ladders/")
+    except Exception as e:
+        print(e)
+
+def chess():
+    try:
+        print("Opening Chess...")
+        webbrowser.open("https://www.chess.com/play/computer")
+    except Exception as e:
+        print(e)
+
 def main_cmd(input_choice):
   while True:
     print_cwd(input_choice)
 
-    command = takeCommand().lower()
+    command = command_voice_text(input_choice).lower()
     if command == 'none':
         continue
     if command == "help":
@@ -132,6 +168,8 @@ def main_cmd(input_choice):
         pwd()
     elif command.startswith("cd "):
         cd(command[3:])
+    elif command == "ls":
+        ls(os.getcwd())
     elif command.startswith("ls "):
         ls(command[3:])
     elif command.startswith("echo "):
@@ -146,5 +184,20 @@ def main_cmd(input_choice):
         rm(command[3:])
     elif command.startswith("rmdir "):
         rmdir(command[6:])
+    elif command.startswith("mkdir "):
+        mkdir(command[6:])
+    elif command.startswith("google "):
+        try_google(command[7:])
+    elif command.startswith("youtube "):
+        play_music_on_youtube(command[8:])
+    elif command.startswith("snake and ladder"):
+        snake_and_ladder()
+    elif command.startswith("chess"):
+        chess()
     else:
         print("[Unknown command]")
+        opt = input("Wanna google this? (y/n): ")
+        if opt == 'y':
+            try_google(command)
+        else:
+            continue

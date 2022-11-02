@@ -1,5 +1,3 @@
-import sys
-import os
 from module.utils import *
 
 clear()
