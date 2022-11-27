@@ -4,34 +4,17 @@ from tkinter import scrolledtext
 from tkinter import INSERT, WORD, END, DISABLED, RIGHT
 import tkinter.scrolledtext as tkk
 from module.utils import *
-import time
-from gtts import gTTS
-from io import BytesIO
 command=""
 import speech_recognition as sr
-import pygame
+import pyttsx3
 
-def get_audio(text, lang = 'en'):
-	mp3_fo = BytesIO()
-	tts = gTTS(text=text, lang=lang)
-	tts.write_to_fp(mp3_fo)
-	return mp3_fo
 
 def print_gui(text):
 	text_area.insert(END, text + "\n")
-	pygame.init()
-	pygame.mixer.init()
-	music = get_audio(text)
-
-	pygame.mixer.music.load(music, 'mp3')
-
-	pygame.mixer.music.play()
-	while pygame.mixer.music.get_busy():
-		time.sleep(0.1)
-	
-	pygame.mixer.music.stop()
-	pygame.mixer.quit()
-	pygame.quit()
+	engine = pyttsx3.init()
+	engine.setProperty('rate', 150)
+	engine.say(text)
+	engine.runAndWait()
 
 flag = False
 
@@ -48,7 +31,7 @@ def what_to_do_gui(command):
 		if command_ != "":
 			command = command_
 		
-		if action == "smalltalk.greetings.hello":
+		if "smalltalk" in action:
 			print_gui(command)
 			return
 
@@ -126,7 +109,6 @@ def switch():
 def input(event):
 
 	command=entry_1.get() 
-	print("input registered")
 	what_to_do_gui(command)
 	entry_1.delete(0, "end")
 window = Tk()
@@ -201,7 +183,7 @@ image_1 = canvas.create_image(
 	image=image_image_1
 )
 
-text_area=tkk.ScrolledText(window,width=45,height=25,relief="flat",font=("Elephant",11),wrap=WORD)
+text_area=tkk.ScrolledText(window,width=50,height=25,relief="flat",font=("Elephant",11),wrap=WORD)
 text_area.grid(column=0,pady=37,padx=400)
 
 window.resizable(False, False)

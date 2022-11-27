@@ -2,12 +2,8 @@ import sys
 import os
 import webbrowser
 import speech_recognition as sr
-from gtts import gTTS
-from io import BytesIO
-import pygame
-import time
 from module.app import *
-from google.cloud import dialogflow_v2 as dialogflow
+import pyttsx3
 
 def takeCommandVoice():
     r = sr.Recognizer()
@@ -34,27 +30,12 @@ def command_voice_text(inp):
     elif inp == 'voice':
         return takeCommandVoice()
 
-def get_audio(text, lang = 'en'):
-    mp3_fo = BytesIO()
-    tts = gTTS(text=text, lang=lang)
-    tts.write_to_fp(mp3_fo)
-    return mp3_fo
-
 def print_(text):
     print(text)
-    pygame.init()
-    pygame.mixer.init()
-    music = get_audio(text)
-
-    pygame.mixer.music.load(music, 'mp3')
-
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy():
-        time.sleep(0.1)
-    
-    pygame.mixer.music.stop()
-    pygame.mixer.quit()
-    pygame.quit()
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 150)
+    engine.say(text)
+    engine.runAndWait()
 
     
 
@@ -159,18 +140,36 @@ def print_help():
     print("turn siri off - Turn off AI assistant")
 
 def open_app(command):
-    try:
-        print_("Opening " + command + "...")
-        os.startfile(command)
-    except Exception as e:
-        print(e)
+
+    if sys.platform == 'linux':
+        try:
+            print_("Opening " + command + "...")
+            os.system(command)
+        except Exception as e:
+            print_(e)
+    else:
+        try:
+            print_("Opening " + command + "...")
+            os.system("start " + command)
+        except Exception as e:
+            print_(e)
+
 
 def close_app(command):
-    try:
-        print_("Closing " + command + "...")
-        os.system("taskkill /f /im " + command)
-    except Exception as e:
-        print_(e)
+
+    if sys.platform == 'linux':
+        try:
+            print_("Closing " + command + "...")
+            os.system("killall " + command)
+        except Exception as e:
+            print_(e)
+    else:
+        try:
+            print_("Closing " + command + "...")
+            os.system("taskkill /im " + command + ".exe /f")
+        except Exception as e:
+            print_(e)
+
 
 def try_google(command):
     try:
@@ -215,7 +214,7 @@ def what_to_do(input_choice):
         command_, action = input_text_stark(command)
         if command_ != "":
             command = command_
-        if action == "smalltalk.greetings.hello":
+        if "smalltalk" in action:
             print_(command)
             return
         print('Command for Terminal: ', end = '')

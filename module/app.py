@@ -1,7 +1,6 @@
 import os
 from google.cloud import dialogflow_v2beta1 as dialogflow
 from flask import Flask, request, jsonify, render_template
-from google.protobuf.json_format import MessageToDict
 import json
 
 def detect_intent_with_parameters(project_id, session_id, language_code, user_input):
@@ -74,7 +73,7 @@ def input_text_stark(input_text):
         com_stark += response_dic['parameters']['file-name']
      elif response_dic['action'] == 'os.clearscreen':
         com_stark = "clear"
-     elif response_dic['action'] == 'smalltalk.greetings.hello':
+     elif "smalltalk" in response_dic['action']:
         com_stark = response_dic['fulfillmentText']
     except:
         com_stark = "I didn't get that. Please try again."
