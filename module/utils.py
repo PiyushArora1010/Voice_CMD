@@ -6,6 +6,8 @@ from gtts import gTTS
 from io import BytesIO
 import pygame
 import time
+from module.app import *
+from google.cloud import dialogflow_v2 as dialogflow
 
 def takeCommandVoice():
     r = sr.Recognizer()
@@ -49,6 +51,10 @@ def print_(text):
     pygame.mixer.music.play()
     while pygame.mixer.music.get_busy():
         time.sleep(0.1)
+    
+    pygame.mixer.music.stop()
+    pygame.mixer.quit()
+    pygame.quit()
     
 
 def print_introduction():
@@ -100,7 +106,7 @@ def cp(src, dst):
                 dst_file.write(src_file.read())
     except OSError as error:
         print_error(error)
-
+        
 def cat(path):
     try:
         with open(path, 'r') as file:
@@ -149,6 +155,19 @@ def print_help():
     print_("snake - play snake and ladder")
     print_("chess - play chess")
 
+def open_app(command):
+    try:
+        print_("Opening " + command + "...")
+        os.startfile(command)
+    except Exception as e:
+        print(e)
+
+def close_app(command):
+    try:
+        print_("Closing " + command + "...")
+        os.system("taskkill /f /im " + command)
+    except Exception as e:
+        print_(e)
 
 def try_google(command):
     try:
@@ -178,13 +197,21 @@ def chess():
     except Exception as e:
         print_(e)
 
-def main_cmd(input_choice):
-  while True:
-    print_cwd(input_choice)
+flag = False
 
+def what_to_do(input_choice):
+    global flag
     command = command_voice_text(input_choice).lower()
+    if command == 'turn siri off' and flag == True:
+        flag = False
+        return
+    elif command == 'turn siri off' and flag == False:
+        print_("siri is already off")
+        return
+    if flag:
+        command = input_text_stark(command)
     if command == 'none':
-        continue
+        return
     if command == "help":
         print_help()
     elif command == "clear":
@@ -222,10 +249,23 @@ def main_cmd(input_choice):
         snake_and_ladder()
     elif command.startswith("chess"):
         chess()
+    elif command.startswith("open "):
+        open_app(command[5:])
+    elif command.startswith("turn siri on"):
+        print_("Hello User! I am here to assist you!")
+        flag = True
+    elif command.startswith("turn siri off"):
+        print_("Turning off...")
+        flag = False
     else:
         print_("[Unknown command]")
         opt = input("Wanna google this? (y/n): ")
         if opt == 'y':
             try_google(command)
         else:
-            continue
+            return
+
+def main_cmd(input_choice):
+  while True:
+    print_cwd(input_choice)
+    what_to_do(input_choice)
