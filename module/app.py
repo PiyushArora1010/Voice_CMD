@@ -74,6 +74,8 @@ def input_text_stark(input_text):
         com_stark += response_dic['parameters']['file-name']
      elif response_dic['action'] == 'os.clearscreen':
         com_stark = "clear"
+     elif response_dic['action'] == 'smalltalk.greetings.hello':
+        com_stark = response_dic['fulfillmentText']
     except:
         com_stark = "I didn't get that. Please try again."
-    return com_stark
+    return com_stark, response_dic['action']

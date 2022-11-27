@@ -55,6 +55,7 @@ def print_(text):
     pygame.mixer.music.stop()
     pygame.mixer.quit()
     pygame.quit()
+
     
 
 def print_introduction():
@@ -211,11 +212,15 @@ def what_to_do(input_choice):
         print_("siri is already off")
         return
     if flag:
-        command_ = input_text_stark(command)
+        command_, action = input_text_stark(command)
         if command_ != "":
             command = command_
+        if action == "smalltalk.greetings.hello":
+            print_(command)
+            return
         print('Command for Terminal: ', end = '')
         print_(command)
+
     if command == 'none':
         return
     if command == "help":
@@ -271,7 +276,9 @@ def what_to_do(input_choice):
         else:
             return
 
+
 def main_cmd(input_choice):
   while True:
     print_cwd(input_choice)
     what_to_do(input_choice)
+
