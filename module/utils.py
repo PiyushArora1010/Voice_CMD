@@ -137,23 +137,25 @@ def exit():
     sys.exit()
 
 def print_help():
-    print_("help - print this message")
-    print_("clear - clear the screen")
-    print_("exit - exit the program")
-    print_("cd - change directory")
-    print_("ls - list files in directory")
-    print_("pwd - print working directory")
-    print_("mkdir - make directory")
-    print_("rmdir - remove directory")
-    print_("rm - remove file")
-    print_("mv - move file")
-    print_("cp - copy file")
-    print_("cat - print file contents")
-    print_("echo - print text")
-    print_("google - search on google")
-    print_("youtube - play music on youtube")
-    print_("snake - play snake and ladder")
-    print_("chess - play chess")
+    print("clear - clear the screen")
+    print("exit - exit the program")
+    print("cd - change directory")
+    print("ls - list files in directory")
+    print("pwd - print working directory")
+    print("mkdir - make directory")
+    print("rmdir - remove directory")
+    print("rm - remove file")
+    print("mv - move file")
+    print("cp - copy file")
+    print("cat - print file contents")
+    print("echo - print text")
+    print("google - search on google")
+    print("youtube - play music on youtube")
+    print("snake - play snake and ladder")
+    print("chess - play chess")
+    print("open - open application")
+    print("turn siri on - Get AI assistant")
+    print("turn siri off - Turn off AI assistant")
 
 def open_app(command):
     try:
@@ -209,7 +211,11 @@ def what_to_do(input_choice):
         print_("siri is already off")
         return
     if flag:
-        command = input_text_stark(command)
+        command_ = input_text_stark(command)
+        if command_ != "":
+            command = command_
+        print('Command for Terminal: ', end = '')
+        print_(command)
     if command == 'none':
         return
     if command == "help":

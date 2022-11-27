@@ -45,38 +45,35 @@ def input_text_stark(input_text):
     response_dic = json.loads(result_json)['queryResult']
     # print(response_dic)
     com_stark = ""
-    if response_dic['action'] == 'os.makedirectory':
+    try:
+     if response_dic['action'] == 'os.makedirectory':
         com_stark = "mkdir"
         com_stark += " "
         com_stark += response_dic['parameters']['folder-name']
     
-    elif response_dic['action'] == 'os.removedirectory':
+     elif response_dic['action'] == 'os.removedirectory':
         com_stark = "rmdir"
         com_stark += " "
-        com_stark += response_dic['parameters']['folder-remove']
-    elif response_dic['action'] == 'os.cd':
+        try:
+            com_stark += response_dic['parameters']['folder-name']
+        except:
+            com_stark += response_dic['parameters']['folder-remove']
+     elif response_dic['action'] == 'os.cd':
         com_stark = "cd"
         com_stark += " "
         com_stark += response_dic['parameters']['cd']
-    elif response_dic['action'] == 'os.ls':
+     elif response_dic['action'] == 'os.ls':
         com_stark = "ls"
-    elif response_dic['action'] == 'os.presentdirectory':
+     elif response_dic['action'] == 'os.presentdirectory':
         com_stark = "pwd"
-    elif response_dic['action'] == 'os.killstark':
+     elif response_dic['action'] == 'os.killstark':
         com_stark = "exit"
-    elif response_dic['action'] == 'os.cat':
+     elif response_dic['action'] == 'os.cat':
         com_stark = "cat"
         com_stark += " "
         com_stark += response_dic['parameters']['file-name']
-    elif response_dic['action'] == 'os.clearscreen':
+     elif response_dic['action'] == 'os.clearscreen':
         com_stark = "clear"
+    except:
+        com_stark = "I didn't get that. Please try again."
     return com_stark
-
-
-
-
-# while 1:
-#     input_text = input("Enter your command: ")
-#     if input_text == 'exit':
-#         break
-#     print(input_text_stark(input_text))
