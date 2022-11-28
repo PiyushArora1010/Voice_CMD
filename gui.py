@@ -103,13 +103,15 @@ def takeCommandVoice():
 	return query
 
 def switch():
-	command = takeCommandVoice()
+	command = takeCommandVoice().lower()
+	text_area.insert(END,'Query interpreted: ')
+	text_area.insert(END, command + "\n")
 	what_to_do_gui(command)
 
 def input(event):
 
 	command=entry_1.get() 
-	what_to_do_gui(command)
+	what_to_do_gui(command.lower())
 	entry_1.delete(0, "end")
 window = Tk()
 
